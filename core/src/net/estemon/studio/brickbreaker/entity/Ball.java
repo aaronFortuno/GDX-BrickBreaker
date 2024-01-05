@@ -21,7 +21,10 @@ public class Ball {
 
     // public methods
     public void update(float delta) {
+        float newX = x + velocity.x * delta;
+        float newY = y + velocity.y * delta;
 
+        setPosition(newX, newY);
     }
 
     public void setVelocityXY(float velocityX, float velocityY) {
