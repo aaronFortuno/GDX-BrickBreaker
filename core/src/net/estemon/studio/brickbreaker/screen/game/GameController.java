@@ -46,30 +46,34 @@ public class GameController {
     }
 
     private void blockPaddleFromLeavingWorld() {
+        // left
         if (paddle.getX() <= GameConfig.PADDLE_MIN_X) {
             paddle.setX(GameConfig.PADDLE_MIN_X);
         }
 
+        // right
         if (paddle.getX() >= GameConfig.PADDLE_MAX_X) {
             paddle.setX(GameConfig.PADDLE_MAX_X);
         }
     }
 
     private void blockBallFromLeavingWorld() {
+        // left <-> right
         if (ball.getX() <= 0) {
             ball.setX(0);
-            ball.setVelocityXY(-ball.getVelocity().x, ball.getVelocity().y);
+            ball.multiplyVelocityX(-1f);
         } else if (ball.getX() >= GameConfig.WORLD_WIDTH - GameConfig.BALL_SIZE) {
             ball.setX(GameConfig.WORLD_WIDTH - GameConfig.BALL_SIZE);
-            ball.setVelocityXY(-ball.getVelocity().x, ball.getVelocity().y);
+            ball.multiplyVelocityX(-1f);
         }
 
+        // top <-> bottom
         if (ball.getY() <= 0) {
             ball.setY(0);
-            ball.setVelocityXY(ball.getVelocity().x, -ball.getVelocity().y);
+            ball.multiplyVelocityY(-1f);
         } else if (ball.getY() >= GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE) {
             ball.setY(GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE);
-            ball.setVelocityXY(ball.getVelocity().x, -ball.getVelocity().y);
+            ball.multiplyVelocityY(-1f);
         }
     }
 
