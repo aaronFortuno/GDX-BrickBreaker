@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import net.estemon.studio.brickbreaker.config.GameConfig;
@@ -13,6 +14,7 @@ import net.estemon.studio.brickbreaker.entity.Brick;
 import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.entity.Paddle;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
+import net.estemon.studio.util.shape.RectangleUtils;
 
 public class GameController {
 
@@ -141,6 +143,26 @@ public class GameController {
                 continue;
             }
 
+            Vector2 topLeft = RectangleUtils.getTopLeft(brickBounds);
+            Vector2 topRight = RectangleUtils.getTopRight(brickBounds);
+            Vector2 bottomLeft = RectangleUtils.getBottomLeft(brickBounds);
+            Vector2 bottomRight = RectangleUtils.getBottomRight(brickBounds);
+
+            Vector2 center = new Vector2(ballBounds.x, ballBounds.y);
+            float squareRadius = ballBounds.radius * ballBounds.radius;
+
+            boolean topHit = Intersector.intersectSegmentCircle(topLeft, topRight, center, squareRadius);
+            boolean bottomHit = Intersector.intersectSegmentCircle(bottomLeft, bottomRight, center, squareRadius);
+            boolean leftHit = Intersector.intersectSegmentCircle(bottomLeft, topLeft, center, squareRadius);
+            boolean rightHit = Intersector.intersectSegmentCircle(bottomRight, topRight, center, squareRadius);
+
+            if ((ball.getVelocity().y < 0 && topHit) || (ball.getVelocity().y > 0 && bottomHit)) {
+                ball.multiplyVelocityY(-1f);
+                bricks.removeIndex(i);
+            } else if ((ball.getVelocity().x > 0 && leftHit) || (ball.getVelocity().x < 0 && rightHit)) {
+                ball.multiplyVelocityX(-1f);
+                bricks.removeIndex(i);
+            }
 
         }
     }
