@@ -2,7 +2,6 @@ package net.estemon.studio.brickbreaker;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import net.estemon.studio.brickbreaker.BrickBreakerGame;
 import net.estemon.studio.brickbreaker.config.GameConfig;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument

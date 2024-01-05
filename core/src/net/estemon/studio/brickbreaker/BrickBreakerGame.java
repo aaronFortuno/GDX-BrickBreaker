@@ -1,45 +1,30 @@
 package net.estemon.studio.brickbreaker;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Logger;
 
-import net.estemon.studio.brickbreaker.screen.game.GameScreen;
+import net.estemon.studio.brickbreaker.common.ScoreController;
+import net.estemon.studio.brickbreaker.screen.loading.LoadingScreen;
+import net.estemon.studio.util.game.GameBase;
 
 
-public class BrickBreakerGame extends Game {
+public class BrickBreakerGame extends GameBase {
 
-	private AssetManager assetManager;
-	private SpriteBatch batch;
+	// attributes
+	private ScoreController scoreController;
 
+	public BrickBreakerGame() {
+		super();
+		System.out.println("[BRICK BREAKER GAME]");
+	}
 
+	// public methods
 	@Override
-	public void create() {
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-
-		assetManager = new AssetManager();
-		assetManager.getLogger().setLevel(Logger.DEBUG);
-
-		batch = new SpriteBatch();
-
-		setScreen(new GameScreen(this));
+	public void postCreate() {
+		System.out.println("[BRICK BREAKER GAME] postCreate");
+		scoreController = new ScoreController();
+		setScreen(new LoadingScreen(this));
 	}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		assetManager.dispose();
-		batch.dispose();
-	}
-
-	public AssetManager getAssetManager() {
-		return assetManager;
-	}
-
-	public SpriteBatch getBatch() {
-		return batch;
+	public ScoreController getScoreController() {
+		return scoreController;
 	}
 }

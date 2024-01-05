@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
+import net.estemon.studio.brickbreaker.common.ScoreController;
 import net.estemon.studio.brickbreaker.config.GameConfig;
 import net.estemon.studio.brickbreaker.entity.Ball;
 import net.estemon.studio.brickbreaker.entity.Brick;
@@ -19,6 +20,8 @@ import net.estemon.studio.util.shape.RectangleUtils;
 public class GameController {
 
     // attributes
+    private final ScoreController scoreController;
+
     private EntityFactory factory;
     private Paddle paddle;
     private PaddleInputController paddleInputController;
@@ -28,7 +31,8 @@ public class GameController {
     private boolean drawGrid = true;
 
     // constructors
-    public GameController() {
+    public GameController(ScoreController scoreController) {
+        this.scoreController = scoreController;
         init();
     }
 
@@ -170,12 +174,15 @@ public class GameController {
 
             if ((ball.getVelocity().y < 0 && topHit) || (ball.getVelocity().y > 0 && bottomHit)) {
                 ball.multiplyVelocityY(-1f);
-                bricks.removeIndex(i);
             } else if ((ball.getVelocity().x > 0 && leftHit) || (ball.getVelocity().x < 0 && rightHit)) {
                 ball.multiplyVelocityX(-1f);
-                bricks.removeIndex(i);
             }
 
+            bricks.removeIndex(i);
+
+            // score control
+            scoreController.addScore(GameConfig.BRICK_SCORE);
+            System.out.println("[SCORE] " + scoreController.getScoreString());
         }
     }
 

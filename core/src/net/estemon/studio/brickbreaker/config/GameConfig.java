@@ -6,6 +6,9 @@ public final class GameConfig {
     public static final int WIDTH = 1024; // px
     public static final int HEIGHT = 768; // px
 
+    public static final float HUD_WIDTH = 1024f;
+    public static final float HUD_HEIGHT = 768f;
+
     public static final float WORLD_WIDTH = 32f;
     public static final float WORLD_HEIGHT = 24f;
 
@@ -42,6 +45,7 @@ public final class GameConfig {
     public static final float BALL_VELOCITY = 15f;
     public static final float BALL_START_ANGLE = 60f;
 
+    public static final int BRICK_SCORE = 10;
 
     private GameConfig() {} // not instantiable
 }

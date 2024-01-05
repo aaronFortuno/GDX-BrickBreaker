@@ -5,29 +5,33 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.estemon.studio.brickbreaker.BrickBreakerGame;
+import net.estemon.studio.brickbreaker.common.ScoreController;
+import net.estemon.studio.util.game.GameBase;
 
 public class GameScreen extends ScreenAdapter {
 
     // attributes
-    private final BrickBreakerGame game;
+    private final GameBase game;
     private final AssetManager assetManager;
     private final SpriteBatch batch;
+    private final ScoreController scoreController;
 
     private GameController controller;
     private GameRenderer renderer;
 
     // constructors
-    public GameScreen(BrickBreakerGame game) {
+    public GameScreen(GameBase game) {
         this.game = game;
         assetManager = game.getAssetManager();
         batch = game.getBatch();
+        scoreController = ((BrickBreakerGame)game).getScoreController();
     }
 
     // public methods
 
     @Override
     public void show() {
-        controller = new GameController();
+        controller = new GameController(scoreController);
         renderer = new GameRenderer(controller, batch, assetManager);
     }
 
