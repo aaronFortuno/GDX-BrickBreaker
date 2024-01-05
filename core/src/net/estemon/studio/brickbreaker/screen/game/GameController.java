@@ -1,5 +1,10 @@
 package net.estemon.studio.brickbreaker.screen.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
 import net.estemon.studio.brickbreaker.config.GameConfig;
@@ -18,6 +23,8 @@ public class GameController {
     private Array<Brick> bricks = new Array<>();
     private Ball ball;
 
+    private boolean drawGrid = true;
+
     // constructors
     public GameController() {
         init();
@@ -35,6 +42,9 @@ public class GameController {
 
     // public methods
     public void update(float delta) {
+        // handle debug input
+        handleDebugInput();
+
         // paddle logic
         paddleInputController.update(delta);
         paddle.update(delta);
@@ -43,6 +53,8 @@ public class GameController {
         // ball logic
         ball.update(delta);
         blockBallFromLeavingWorld();
+
+        checkCollisions();
     }
 
     private void blockPaddleFromLeavingWorld() {
@@ -87,5 +99,49 @@ public class GameController {
 
     public Ball getBall() {
         return ball;
+    }
+
+    public boolean isDrawGrid() {
+        return drawGrid;
+    }
+
+    // private methods
+    private void handleDebugInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            drawGrid = !drawGrid;
+        }
+    }
+
+    private void checkCollisions() {
+        checkBallWithPaddleCollision();
+        checkBallWithBrickCollision();
+    }
+
+    private void checkBallWithPaddleCollision() {
+        Circle ballBounds = ball.getBounds();
+        Rectangle paddleBounds = paddle.getBounds();
+
+        if (Intersector.overlaps(ballBounds, paddleBounds)) {
+            float ballCenterX = ball.getX() + GameConfig.BALL_RADIUS;
+            float percent = (ballCenterX - paddle.getX()) / paddle.getWidth(); // 0-1
+
+            // interpolate angle between 150 and 30
+            float boundsAngle = 150 - percent * 120;
+            ball.setVelocity(boundsAngle, ball.getSpeed());
+        }
+    }
+
+    private void checkBallWithBrickCollision() {
+        Circle ballBounds = ball.getBounds();
+        for (int i = 0; i < bricks.size; i++) {
+            Brick brick = bricks.get(i);
+            Rectangle brickBounds = brick.getBounds();
+
+            if (!Intersector.overlaps(ballBounds, brickBounds)) {
+                continue;
+            }
+
+
+        }
     }
 }

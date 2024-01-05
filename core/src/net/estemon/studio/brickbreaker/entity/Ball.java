@@ -85,10 +85,16 @@ public class Ball {
         return bounds;
     }
 
+    public float getSpeed() {
+        return velocity.len();
+    }
+
     // private methods
     private void updateBounds() {
         float halfSize = size / 2f;
         bounds.setPosition(x + halfSize, y + halfSize);
         bounds.setRadius(halfSize);
     }
+
+
 }
