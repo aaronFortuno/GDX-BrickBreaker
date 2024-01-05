@@ -16,14 +16,12 @@ public class ViewportUtils {
     }
 
     public static void drawGrid(Viewport viewport, ShapeRenderer renderer, int cellSize) {
-
-        // Validate parameters
-        if (viewport == null) {
-            throw new IllegalArgumentException("VIEWPORT param is mandatory");
-        }
+        // validate parameters
+        Validate.notNull(viewport);
+        Validate.notNull(renderer);
 
         if (renderer == null) {
-            throw new IllegalArgumentException("RENDERER param is mandatory");
+            throw new IllegalArgumentException("RENDERER param is mandatory!");
         }
 
         if (cellSize < DEFAULT_CELL_SIZE) {
@@ -69,7 +67,7 @@ public class ViewportUtils {
 
     public static void debugPixelPerUnit(Viewport viewport) {
         if (viewport == null) {
-            throw new IllegalArgumentException("Viewport param is required");
+            throw new IllegalArgumentException("VIEWPORT param is required!");
         }
 
         float screenWidth = viewport.getScreenWidth();

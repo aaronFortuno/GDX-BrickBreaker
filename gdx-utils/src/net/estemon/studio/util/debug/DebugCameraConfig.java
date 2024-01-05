@@ -37,7 +37,7 @@ public class DebugCameraConfig {
     private static final float DEFAULT_MAX_ZOOM_IN = 0.5f;
     private static final float DEFAULT_MAX_ZOOM_OUT = 5f;
 
-    private static final String FILE_PATH = "debug/debugCameraConfig.json";
+    private static final String FILE_PATH = "debug/debug-camera.json";
 
     // == attributes ==
     private float maxZoomIn;

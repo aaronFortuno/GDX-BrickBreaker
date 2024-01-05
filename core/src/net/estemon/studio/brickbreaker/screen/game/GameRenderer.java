@@ -1,9 +1,11 @@
 package net.estemon.studio.brickbreaker.screen.game;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -13,6 +15,7 @@ import net.estemon.studio.util.GdxUtils;
 import net.estemon.studio.util.ViewportUtils;
 import net.estemon.studio.util.debug.DebugCameraConfig;
 import net.estemon.studio.util.debug.DebugCameraController;
+import net.estemon.studio.util.debug.ShapeRendererUtils;
 
 public class GameRenderer implements Disposable {
 
@@ -52,7 +55,7 @@ public class GameRenderer implements Disposable {
         // clear screen
         GdxUtils.clearScreen();
 
-        //
+        // drawing
         renderDebug();
     }
 
@@ -80,6 +83,12 @@ public class GameRenderer implements Disposable {
     }
 
     private void drawDebug() {
-        renderer.circle(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y, 3, 30);
+        Color oldColor = renderer.getColor().cpy();
+        renderer.setColor(Color.CORAL);
+
+        Rectangle paddleBounds = controller.getPaddle().getBounds();
+        ShapeRendererUtils.rect(renderer, paddleBounds);
+
+        renderer.setColor(oldColor);
     }
 }
