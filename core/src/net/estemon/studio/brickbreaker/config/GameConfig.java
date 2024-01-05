@@ -32,7 +32,7 @@ public final class GameConfig {
     public static final float BRICK_COLUMN_SPACING = 0.5f;
     public static final float BRICK_ROW_SPACING = 0.5f;
     public static final int COLUMN_COUNT = 12;
-    public static final int ROW_COUNT = 6;
+    public static final int ROW_COUNT = 8;
 
     public static final float BALL_SIZE = 0.8f;
     public static final float BALL_RADIUS = BALL_SIZE / 2f;
