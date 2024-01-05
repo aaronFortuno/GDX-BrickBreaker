@@ -119,6 +119,10 @@ public class GameController {
         return ball;
     }
 
+    public String getScoreString() {
+        return scoreController.getScoreString();
+    }
+
     public boolean isDrawGrid() {
         return drawGrid;
     }

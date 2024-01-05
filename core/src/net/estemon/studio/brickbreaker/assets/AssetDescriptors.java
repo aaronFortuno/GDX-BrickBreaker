@@ -7,8 +7,10 @@ import com.badlogic.gdx.utils.Array;
 public final class AssetDescriptors {
 
     // constants
-    public static final AssetDescriptor<BitmapFont> FONT =
-            new AssetDescriptor<>(AssetPaths.SCORE_FONT, BitmapFont.class);
+    public static final AssetDescriptor<BitmapFont> FONT_16 =
+            new AssetDescriptor<>(AssetPaths.FONT_16, BitmapFont.class);
+    public static final AssetDescriptor<BitmapFont> FONT_32 =
+            new AssetDescriptor<>(AssetPaths.FONT_32, BitmapFont.class);
 
     // all descriptors
     public static final Array<AssetDescriptor> ALL = new Array<>();
@@ -16,7 +18,8 @@ public final class AssetDescriptors {
     // static init
     static {
         ALL.addAll(
-                FONT
+                FONT_16,
+                FONT_32
         );
     }
 
