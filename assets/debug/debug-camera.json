@@ -1,5 +1,5 @@
 {
-  "maxZoomIn": "0.5",
+  "maxZoomIn": "0.1",
   "maxZoomOut": "5",
   "moveSpeed": "40",
   "zoomSpeed": "2",

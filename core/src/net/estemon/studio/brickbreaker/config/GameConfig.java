@@ -3,10 +3,10 @@ package net.estemon.studio.brickbreaker.config;
 public final class GameConfig {
 
     // desktop only
-    public static final int WIDTH = 960; // px
+    public static final int WIDTH = 1024; // px
     public static final int HEIGHT = 768; // px
 
-    public static final float WORLD_WIDTH = 30f;
+    public static final float WORLD_WIDTH = 32f;
     public static final float WORLD_HEIGHT = 24f;
 
     public static final float WORLD_CENTER_X = WORLD_WIDTH / 2f;
@@ -28,11 +28,19 @@ public final class GameConfig {
     public static final float BRICK_HEIGHT = 1f;
 
     public static final float BRICK_LEFT_PAD = 0.5f;
-    public static final float BRICK_TOP_PAD = 2.5f;
+    public static final float BRICK_TOP_PAD = 1.5f;
     public static final float BRICK_COLUMN_SPACING = 0.5f;
     public static final float BRICK_ROW_SPACING = 0.5f;
     public static final int COLUMN_COUNT = 12;
     public static final int ROW_COUNT = 6;
+
+    public static final float BALL_SIZE = 0.8f;
+    public static final float BALL_RADIUS = BALL_SIZE / 2f;
+    public static final float BALL_START_X = PADDLE_START_X + (PADDLE_WIDTH - BALL_SIZE) / 2f;
+    public static final float BALL_START_Y = PADDLE_START_Y + PADDLE_HEIGHT;
+
+    public static final float BALL_VELOCITY = 15f;
+    public static final float BALL_START_ANGLE = 60f;
 
 
     private GameConfig() {} // not instantiable

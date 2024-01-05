@@ -1,6 +1,10 @@
 package net.estemon.studio.brickbreaker.screen.game;
 
+import com.badlogic.gdx.utils.Array;
+
 import net.estemon.studio.brickbreaker.config.GameConfig;
+import net.estemon.studio.brickbreaker.entity.Ball;
+import net.estemon.studio.brickbreaker.entity.Brick;
 import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.entity.Paddle;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
@@ -11,6 +15,8 @@ public class GameController {
     private EntityFactory factory;
     private Paddle paddle;
     private PaddleInputController paddleInputController;
+    private Array<Brick> bricks = new Array<>();
+    private Ball ball;
 
     // constructors
     public GameController() {
@@ -21,6 +27,10 @@ public class GameController {
         factory = new EntityFactory();
         paddle = factory.createPaddle();
         paddleInputController = new PaddleInputController(paddle);
+
+        bricks.addAll(factory.createBricks());
+
+        ball = factory.createBall();
     }
 
     // public methods
@@ -36,9 +46,19 @@ public class GameController {
         if (paddle.getX() >= GameConfig.PADDLE_MAX_X) {
             paddle.setX(GameConfig.PADDLE_MAX_X);
         }
+
+        ball.update(delta);
     }
 
     public Paddle getPaddle() {
         return paddle;
+    }
+
+    public Array<Brick> getBricks() {
+        return bricks;
+    }
+
+    public Ball getBall() {
+        return ball;
     }
 }

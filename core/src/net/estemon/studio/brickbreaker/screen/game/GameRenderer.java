@@ -5,12 +5,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.estemon.studio.brickbreaker.config.GameConfig;
+import net.estemon.studio.brickbreaker.entity.Brick;
 import net.estemon.studio.util.GdxUtils;
 import net.estemon.studio.util.ViewportUtils;
 import net.estemon.studio.util.debug.DebugCameraConfig;
@@ -84,10 +86,24 @@ public class GameRenderer implements Disposable {
 
     private void drawDebug() {
         Color oldColor = renderer.getColor().cpy();
-        renderer.setColor(Color.CORAL);
 
+        // drawing paddle
+        renderer.setColor(Color.CORAL);
         Rectangle paddleBounds = controller.getPaddle().getBounds();
         ShapeRendererUtils.rect(renderer, paddleBounds);
+
+        // drawing bricks
+        renderer.setColor(Color.ROYAL);
+        for (Brick brick : controller.getBricks()) {
+            Rectangle brickBounds = brick.getBounds();
+            ShapeRendererUtils.rect(renderer, brickBounds);
+        }
+
+        // drawing ball
+        renderer.setColor(Color.VIOLET);
+        Circle ballBounds = controller.getBall().getBounds();
+        ShapeRendererUtils.circle(renderer, ballBounds);
+
 
         renderer.setColor(oldColor);
     }
