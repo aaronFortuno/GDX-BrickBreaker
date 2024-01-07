@@ -29,6 +29,7 @@ public class GameController {
     private Ball ball;
 
     private boolean drawGrid = true;
+    private boolean drawDebug = true;
 
     // constructors
     public GameController(ScoreController scoreController) {
@@ -75,6 +76,43 @@ public class GameController {
         }
     }
 
+
+
+    public Paddle getPaddle() {
+        return paddle;
+    }
+
+    public Array<Brick> getBricks() {
+        return bricks;
+    }
+
+    public Ball getBall() {
+        return ball;
+    }
+
+    public String getScoreString() {
+        return scoreController.getScoreString();
+    }
+
+    public boolean isDrawGrid() {
+        return drawGrid;
+    }
+
+    public boolean isDrawDebug() {
+        return drawDebug;
+    }
+
+    // private methods
+    private void handleDebugInput() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            drawGrid = !drawGrid;
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
+            drawDebug = !drawDebug;
+        }
+    }
+
     private void blockPaddleFromLeavingWorld() {
         // left
         if (paddle.getX() <= GameConfig.PADDLE_MIN_X) {
@@ -104,33 +142,6 @@ public class GameController {
         } else if (ball.getY() >= GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE) {
             ball.setY(GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE);
             ball.multiplyVelocityY(-1f);
-        }
-    }
-
-    public Paddle getPaddle() {
-        return paddle;
-    }
-
-    public Array<Brick> getBricks() {
-        return bricks;
-    }
-
-    public Ball getBall() {
-        return ball;
-    }
-
-    public String getScoreString() {
-        return scoreController.getScoreString();
-    }
-
-    public boolean isDrawGrid() {
-        return drawGrid;
-    }
-
-    // private methods
-    private void handleDebugInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
-            drawGrid = !drawGrid;
         }
     }
 

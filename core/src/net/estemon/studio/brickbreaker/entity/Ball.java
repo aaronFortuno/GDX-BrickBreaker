@@ -89,6 +89,14 @@ public class Ball {
         return velocity.len();
     }
 
+    public float getWidth() {
+        return size;
+    }
+
+    public float getHeight() {
+        return size;
+    }
+
     public void stop() {
         velocity.setZero();
     }
