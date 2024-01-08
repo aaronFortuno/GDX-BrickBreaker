@@ -47,5 +47,8 @@ public final class GameConfig {
 
     public static final int BRICK_SCORE = 10;
 
+    public static final float PICKUP_SPAWN_TIME = 2f;
+    public static final float PICKUP_VELOCITY_Y = -10f;
+
     private GameConfig() {} // not instantiable
 }

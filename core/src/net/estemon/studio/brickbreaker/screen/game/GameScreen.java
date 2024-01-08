@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import net.estemon.studio.brickbreaker.BrickBreakerGame;
 import net.estemon.studio.brickbreaker.common.ScoreController;
+import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.util.game.GameBase;
 
 public class GameScreen extends ScreenAdapter {
@@ -18,6 +19,7 @@ public class GameScreen extends ScreenAdapter {
 
     private GameController controller;
     private GameRenderer renderer;
+    private EntityFactory factory;
 
     // constructors
     public GameScreen(GameBase game) {
@@ -31,7 +33,8 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        controller = new GameController(scoreController);
+        factory = new EntityFactory(assetManager);
+        controller = new GameController(scoreController, factory);
         renderer = new GameRenderer(controller, batch, assetManager);
     }
 

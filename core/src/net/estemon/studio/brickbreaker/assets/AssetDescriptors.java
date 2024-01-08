@@ -2,6 +2,7 @@ package net.estemon.studio.brickbreaker.assets;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 
@@ -16,6 +17,9 @@ public final class AssetDescriptors {
     public static final AssetDescriptor<TextureAtlas> GAME_PLAY =
             new AssetDescriptor<>(AssetPaths.GAME_PLAY, TextureAtlas.class);
 
+    public static final AssetDescriptor<ParticleEffect> FIRE =
+            new AssetDescriptor<>(AssetPaths.FIRE, ParticleEffect.class);
+
     // all descriptors
     public static final Array<AssetDescriptor> ALL = new Array<>();
 
@@ -24,7 +28,8 @@ public final class AssetDescriptors {
         ALL.addAll(
                 FONT_16,
                 FONT_32,
-                GAME_PLAY
+                GAME_PLAY,
+                FIRE
         );
     }
 

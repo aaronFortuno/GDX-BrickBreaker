@@ -1,9 +1,25 @@
 package net.estemon.studio.brickbreaker.entity;
 
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.utils.Array;
+
+import net.estemon.studio.brickbreaker.assets.AssetDescriptors;
 import net.estemon.studio.brickbreaker.config.GameConfig;
 
 public class EntityFactory {
+
+    // attributes
+    private final AssetManager assetManager;
+    private ParticleEffectPool fireEffectPool;
+
+    public EntityFactory(AssetManager assetManager) {
+        this.assetManager = assetManager;
+
+        ParticleEffect effect = assetManager.get(AssetDescriptors.FIRE);
+        fireEffectPool = new ParticleEffectPool(effect, 5, 20);
+    }
 
     // public methods
     public Paddle createPaddle() {
@@ -47,6 +63,13 @@ public class EntityFactory {
         brick.setSize(GameConfig.BRICK_WIDTH, GameConfig.BRICK_HEIGHT);
 
         return brick;
+    }
+
+    public ParticleEffectPool.PooledEffect createFire(float x, float y) {
+        ParticleEffectPool.PooledEffect effect = fireEffectPool.obtain();
+        effect.setPosition(x, y);
+        effect.start();
+        return effect;
     }
 
     // private methods

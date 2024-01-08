@@ -2,6 +2,7 @@ package net.estemon.studio.brickbreaker.screen.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,7 +23,7 @@ public class GameController {
     // attributes
     private final ScoreController scoreController;
 
-    private EntityFactory factory;
+    private final EntityFactory factory;
     private Paddle paddle;
     private PaddleInputController paddleInputController;
     private Array<Brick> bricks = new Array<>();
@@ -31,14 +32,17 @@ public class GameController {
     private boolean drawGrid = true;
     private boolean drawDebug = true;
 
+    private Array<ParticleEffectPool.PooledEffect> effects = new Array<>();
+
+
     // constructors
-    public GameController(ScoreController scoreController) {
+    public GameController(ScoreController scoreController, EntityFactory factory) {
         this.scoreController = scoreController;
+        this.factory = factory;
         init();
     }
 
     private void init() {
-        factory = new EntityFactory();
         paddle = factory.createPaddle();
         paddleInputController = new PaddleInputController(paddle);
 
@@ -71,6 +75,17 @@ public class GameController {
 
         checkCollisions();
 
+        for (int i = 0; i < effects.size; i++) {
+            ParticleEffectPool.PooledEffect effect = effects.get(i);
+            effect.update(delta);
+
+            if (effect.isComplete()) {
+                effects.removeIndex(i);
+                effect.free();
+            }
+        }
+
+        // check endgame
         if (bricks.isEmpty()) {
             startLevel();
         }
@@ -92,6 +107,10 @@ public class GameController {
 
     public String getScoreString() {
         return scoreController.getScoreString();
+    }
+
+    public Array<ParticleEffectPool.PooledEffect> getEffects() {
+        return effects;
     }
 
     public boolean isDrawGrid() {
@@ -193,12 +212,22 @@ public class GameController {
                 ball.multiplyVelocityX(-1f);
             }
 
+            // create fire effect
+            float effectX = brick.getX() + brick.getWidth() / 2f;
+            float effectY = brick.getY() + brick.getHeight() / 2f;
+            spawnFireEffect(effectX, effectY);
+            
             bricks.removeIndex(i);
 
             // score control
             scoreController.addScore(GameConfig.BRICK_SCORE);
             System.out.println("[SCORE] " + scoreController.getScoreString());
         }
+    }
+
+    private void spawnFireEffect(float effectX, float effectY) {
+        ParticleEffectPool.PooledEffect effect = factory.createFire(effectX, effectY);
+        effects.add(effect);
     }
 
     private void activateBall() {

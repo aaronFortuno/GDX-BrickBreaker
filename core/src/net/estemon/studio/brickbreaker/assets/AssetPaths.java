@@ -8,5 +8,7 @@ public final class AssetPaths {
 
     public static final String GAME_PLAY = "gameplay/gameplay.atlas";
 
+    public static final String FIRE = "effects/fire.pfx";
+
     private AssetPaths() {} // not instantiable
 }
