@@ -4,6 +4,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 import net.estemon.studio.brickbreaker.assets.AssetDescriptors;
 import net.estemon.studio.brickbreaker.config.GameConfig;
@@ -13,12 +15,18 @@ public class EntityFactory {
     // attributes
     private final AssetManager assetManager;
     private ParticleEffectPool fireEffectPool;
+    private Pool<Pickup> pickupPool;
 
     public EntityFactory(AssetManager assetManager) {
         this.assetManager = assetManager;
+        init();
+    }
 
+    private void init() {
         ParticleEffect effect = assetManager.get(AssetDescriptors.FIRE);
         fireEffectPool = new ParticleEffectPool(effect, 5, 20);
+
+        pickupPool = Pools.get(Pickup.class, 10);
     }
 
     // public methods
@@ -70,6 +78,23 @@ public class EntityFactory {
         effect.setPosition(x, y);
         effect.start();
         return effect;
+    }
+
+    public Pickup createPickup(float x, float y) {
+        Pickup pickup = pickupPool.obtain();
+        pickup.setType(PickupType.random());
+        pickup.setSize(GameConfig.PICKUP_SIZE, GameConfig.PICKUP_SIZE);
+        pickup.setPosition(x, y);
+        pickup.setVelocityY(GameConfig.PICKUP_VELOCITY_Y);
+        return pickup;
+    }
+
+    public void freePickup(Pickup pickup) {
+        pickupPool.free(pickup);
+    }
+
+    public void freePickups(Array<Pickup> pickups) {
+        pickupPool.freeAll(pickups);
     }
 
     // private methods

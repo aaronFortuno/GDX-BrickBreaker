@@ -32,17 +32,18 @@ public class Pickup extends EntityBase implements Pool.Poolable {
     public boolean isExpand() {
         return type.isExpand();
     }
-
     public boolean isShrink() {
         return type.isShrink();
     }
-
     public boolean isSlowDown() {
         return type.isSlowDown();
     }
-
     public boolean isSpeedUp() {
         return  type.isSpeedUp();
+    }
+
+    public PickupType getType() {
+        return type;
     }
 
     @Override
@@ -50,4 +51,6 @@ public class Pickup extends EntityBase implements Pool.Poolable {
         type = null;
         velocity.setZero();
     }
+
+
 }

@@ -23,6 +23,7 @@ import net.estemon.studio.brickbreaker.config.GameConfig;
 import net.estemon.studio.brickbreaker.entity.Ball;
 import net.estemon.studio.brickbreaker.entity.Brick;
 import net.estemon.studio.brickbreaker.entity.Paddle;
+import net.estemon.studio.brickbreaker.entity.Pickup;
 import net.estemon.studio.util.GdxUtils;
 import net.estemon.studio.util.Validate;
 import net.estemon.studio.util.ViewportUtils;
@@ -51,6 +52,11 @@ public class GameRenderer implements Disposable {
     private TextureRegion ballRegion;
     private TextureRegion brickRegion;
 
+    private TextureRegion expandRegion;
+    private TextureRegion shrinkRegion;
+    private TextureRegion slowDownRegion;
+    private TextureRegion speedUpRegion;
+
 
     // constructors
     public GameRenderer(GameController controller, SpriteBatch batch, AssetManager assetManager) {
@@ -77,6 +83,11 @@ public class GameRenderer implements Disposable {
         paddleRegion = gameplayAtlas.findRegion(RegionNames.PADDLE);
         ballRegion = gameplayAtlas.findRegion(RegionNames.BALL);
         brickRegion = gameplayAtlas.findRegion(RegionNames.BRICK);
+
+        expandRegion = gameplayAtlas.findRegion(RegionNames.EXPAND);
+        shrinkRegion = gameplayAtlas.findRegion(RegionNames.SHRINK);
+        slowDownRegion = gameplayAtlas.findRegion(RegionNames.SLOW_DOWN);
+        speedUpRegion = gameplayAtlas.findRegion(RegionNames.SPEED_UP);
     }
 
     // public methods
@@ -134,12 +145,39 @@ public class GameRenderer implements Disposable {
             drawEntity(batch, brickRegion, brick);
         }
 
+        // pickups
+        Array<Pickup> pickups = controller.getPickups();
+        for (int i = 0; i < pickups.size; i++) {
+            Pickup pickup = pickups.get(i);
+            TextureRegion pickupRegion = findPickupRegion(pickup);
+            drawEntity(batch, pickupRegion, pickup);
+        }
+
         // effects
         Array<ParticleEffectPool.PooledEffect> effects = controller.getEffects();
         for (int i = 0; i < effects.size; i++) {
             ParticleEffectPool.PooledEffect effect = effects.get(i);
             effect.draw(batch);
         }
+    }
+
+    private TextureRegion findPickupRegion(Pickup pickup) {
+        TextureRegion region = null;
+        if (pickup.isExpand()) {
+            region = expandRegion;
+        } else if (pickup.isShrink()) {
+            region = shrinkRegion;
+        } else if (pickup.isSlowDown()) {
+            region = slowDownRegion;
+        } else if (pickup.isSpeedUp()) {
+            region = speedUpRegion;
+        }
+
+        if (region == null) {
+            throw new IllegalArgumentException("Can't find region for pickupType: " + pickup.getType());
+        }
+
+        return region;
     }
 
     private void renderDebug() {
@@ -178,6 +216,13 @@ public class GameRenderer implements Disposable {
         Circle ballBounds = controller.getBall().getBounds();
         ShapeRendererUtils.circle(renderer, ballBounds);
 
+        // pickups
+        Array<Pickup> pickups = controller.getPickups();
+        for (int i = 0; i < pickups.size; i++) {
+            Pickup pickup = pickups.get(i);
+            Rectangle pickupBounds = pickup.getBounds();
+            ShapeRendererUtils.rect(renderer, pickupBounds);
+        }
 
         renderer.setColor(oldColor);
     }

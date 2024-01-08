@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -15,6 +16,7 @@ import net.estemon.studio.brickbreaker.entity.Ball;
 import net.estemon.studio.brickbreaker.entity.Brick;
 import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.entity.Paddle;
+import net.estemon.studio.brickbreaker.entity.Pickup;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
 import net.estemon.studio.util.shape.RectangleUtils;
 
@@ -33,6 +35,7 @@ public class GameController {
     private boolean drawDebug = true;
 
     private Array<ParticleEffectPool.PooledEffect> effects = new Array<>();
+    private Array<Pickup> pickups = new Array<>();
 
 
     // constructors
@@ -73,6 +76,16 @@ public class GameController {
         ball.update(delta);
         blockBallFromLeavingWorld();
 
+        for (int i = 0; i < pickups.size; i++) {
+            Pickup pickup = pickups.get(i);
+            pickup.update(delta);
+
+            if (pickup.getY() < -pickup.getHeight()) {
+                factory.freePickup(pickup);
+                pickups.removeIndex(i);
+            }
+        }
+
         checkCollisions();
 
         for (int i = 0; i < effects.size; i++) {
@@ -103,6 +116,10 @@ public class GameController {
 
     public Ball getBall() {
         return ball;
+    }
+
+    public Array<Pickup> getPickups() {
+        return pickups;
     }
 
     public String getScoreString() {
@@ -167,6 +184,7 @@ public class GameController {
     private void checkCollisions() {
         checkBallWithPaddleCollision();
         checkBallWithBrickCollision();
+        checkPaddleWithPickupCollision();
     }
 
     private void checkBallWithPaddleCollision() {
@@ -214,9 +232,15 @@ public class GameController {
 
             // create fire effect
             float effectX = brick.getX() + brick.getWidth() / 2f;
-            float effectY = brick.getY() + brick.getHeight() / 2f;
-            spawnFireEffect(effectX, effectY);
-            
+            float y = brick.getY() + brick.getHeight() / 2f;
+            spawnFireEffect(effectX, y);
+
+            // spawn pickups
+            if (MathUtils.random() < 0.2) {
+                float pickupX = brick.getX() + (brick.getWidth() - GameConfig.PICKUP_SIZE) / 2f;
+                spawnPickup(pickupX, y);
+            }
+
             bricks.removeIndex(i);
 
             // score control
@@ -225,9 +249,27 @@ public class GameController {
         }
     }
 
+    private void checkPaddleWithPickupCollision() {
+        Rectangle paddleBounds = paddle.getBounds();
+
+        for (int i = 0; i < pickups.size; i++) {
+            Pickup pickup = pickups.get(i);
+            Rectangle pickupBounds = pickup.getBounds();
+            if (Intersector.overlaps(paddleBounds, pickupBounds)) {
+                pickups.removeIndex(i);
+                factory.freePickup(pickup);
+            }
+        }
+    }
+
     private void spawnFireEffect(float effectX, float effectY) {
         ParticleEffectPool.PooledEffect effect = factory.createFire(effectX, effectY);
         effects.add(effect);
+    }
+
+    private void spawnPickup(float x, float y) {
+        Pickup pickup = factory.createPickup(x, y);
+        pickups.add(pickup);
     }
 
     private void activateBall() {
