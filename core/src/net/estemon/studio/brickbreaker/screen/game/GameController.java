@@ -18,6 +18,7 @@ import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.entity.Paddle;
 import net.estemon.studio.brickbreaker.entity.Pickup;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
+import net.estemon.studio.brickbreaker.script.PaddleExpandScript;
 import net.estemon.studio.util.shape.RectangleUtils;
 
 public class GameController {
@@ -256,6 +257,7 @@ public class GameController {
             Pickup pickup = pickups.get(i);
             Rectangle pickupBounds = pickup.getBounds();
             if (Intersector.overlaps(paddleBounds, pickupBounds)) {
+                addScript(pickup);
                 pickups.removeIndex(i);
                 factory.freePickup(pickup);
             }
@@ -281,5 +283,11 @@ public class GameController {
         paddle.setPosition(GameConfig.PADDLE_START_X, GameConfig.PADDLE_START_Y);
         ball.setPosition(GameConfig.BALL_START_X, GameConfig.BALL_START_Y);
         ball.stop();
+    }
+
+    private void addScript(Pickup pickup) {
+        if (pickup.isExpand()) {
+            paddle.addScript(new PaddleExpandScript());
+        }
     }
 }

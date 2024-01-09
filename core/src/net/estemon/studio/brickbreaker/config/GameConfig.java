@@ -15,17 +15,20 @@ public final class GameConfig {
     public static final float WORLD_CENTER_X = WORLD_WIDTH / 2f;
     public static final float WORLD_CENTER_Y = WORLD_HEIGHT / 2f;
 
-    public static final float PADDLE_WIDTH = 3f;
+    public static final float PADDLE_START_WIDTH = 3f;
+    public static final float PADDLE_MIN_WIDTH = 1.2f;
+    public static final float PADDLE_MAX_WIDTH = 4.8f;
+    public static final float PADDLE_RESIZE_FACTOR = 0.15f;
     public static final float PADDLE_HEIGHT = 1f;
 
-    public static final float PADDLE_START_X = (WORLD_WIDTH - PADDLE_WIDTH) / 2f;
+    public static final float PADDLE_START_X = (WORLD_WIDTH - PADDLE_START_WIDTH) / 2f;
     public static final float PADDLE_START_Y = 1f;
 
     public static final float PADDLE_VELOCITY_X = 15f;
 
     public static final float PADDLE_PADDING = 0.3f;
     public static final float PADDLE_MIN_X = PADDLE_PADDING;
-    public static final float PADDLE_MAX_X = WORLD_WIDTH - PADDLE_WIDTH - PADDLE_PADDING;
+    public static final float PADDLE_MAX_X = WORLD_WIDTH - PADDLE_START_WIDTH - PADDLE_PADDING;
 
     public static final float BRICK_WIDTH = 2.125f;
     public static final float BRICK_HEIGHT = 1f;
@@ -39,7 +42,7 @@ public final class GameConfig {
 
     public static final float BALL_SIZE = 0.8f;
     public static final float BALL_RADIUS = BALL_SIZE / 2f;
-    public static final float BALL_START_X = PADDLE_START_X + (PADDLE_WIDTH - BALL_SIZE) / 2f;
+    public static final float BALL_START_X = PADDLE_START_X + (PADDLE_START_WIDTH - BALL_SIZE) / 2f;
     public static final float BALL_START_Y = PADDLE_START_Y + PADDLE_HEIGHT;
 
     public static final float BALL_VELOCITY = 15f;
