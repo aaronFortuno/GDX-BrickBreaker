@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -19,6 +20,7 @@ import net.estemon.studio.brickbreaker.entity.Paddle;
 import net.estemon.studio.brickbreaker.entity.Pickup;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
 import net.estemon.studio.brickbreaker.script.PaddleExpandScript;
+import net.estemon.studio.brickbreaker.script.PaddleShrinkScript;
 import net.estemon.studio.util.shape.RectangleUtils;
 
 public class GameController {
@@ -77,35 +79,15 @@ public class GameController {
         ball.update(delta);
         blockBallFromLeavingWorld();
 
-        for (int i = 0; i < pickups.size; i++) {
-            Pickup pickup = pickups.get(i);
-            pickup.update(delta);
-
-            if (pickup.getY() < -pickup.getHeight()) {
-                factory.freePickup(pickup);
-                pickups.removeIndex(i);
-            }
-        }
-
+        updatePickups(delta);
+        updateEffects(delta);
         checkCollisions();
-
-        for (int i = 0; i < effects.size; i++) {
-            ParticleEffectPool.PooledEffect effect = effects.get(i);
-            effect.update(delta);
-
-            if (effect.isComplete()) {
-                effects.removeIndex(i);
-                effect.free();
-            }
-        }
 
         // check endgame
         if (bricks.isEmpty()) {
             startLevel();
         }
     }
-
-
 
     public Paddle getPaddle() {
         return paddle;
@@ -189,10 +171,10 @@ public class GameController {
     }
 
     private void checkBallWithPaddleCollision() {
-        Circle ballBounds = ball.getBounds();
-        Rectangle paddleBounds = paddle.getBounds();
+        Polygon ballBounds = ball.getBounds();
+        Polygon paddleBounds = paddle.getBounds();
 
-        if (Intersector.overlaps(ballBounds, paddleBounds)) {
+        if (Intersector.overlapConvexPolygons(ballBounds, paddleBounds)) {
             float ballCenterX = ball.getX() + GameConfig.BALL_RADIUS;
             float percent = (ballCenterX - paddle.getX()) / paddle.getWidth(); // 0-1
 
@@ -203,12 +185,22 @@ public class GameController {
     }
 
     private void checkBallWithBrickCollision() {
-        Circle ballBounds = ball.getBounds();
+        Polygon ballPolygon = ball.getBounds();
+
+        float ballRadius = ball.getWidth() / 2f;
+        Circle ballBounds = new Circle(
+                ball.getX() + ballRadius,
+                ball.getY() + ballRadius,
+                ballRadius
+        );
+
         for (int i = 0; i < bricks.size; i++) {
             Brick brick = bricks.get(i);
-            Rectangle brickBounds = brick.getBounds();
+            Polygon brickPolygon = brick.getBounds();
 
-            if (!Intersector.overlaps(ballBounds, brickBounds)) {
+            Rectangle brickBounds = brickPolygon.getBoundingRectangle();
+
+            if (!Intersector.overlapConvexPolygons(ballPolygon, brickPolygon)) {
                 continue;
             }
 
@@ -237,7 +229,7 @@ public class GameController {
             spawnFireEffect(effectX, y);
 
             // spawn pickups
-            if (MathUtils.random() < 0.2) {
+            if (MathUtils.random() < GameConfig.PICKUP_PROBABILITY) {
                 float pickupX = brick.getX() + (brick.getWidth() - GameConfig.PICKUP_SIZE) / 2f;
                 spawnPickup(pickupX, y);
             }
@@ -251,15 +243,39 @@ public class GameController {
     }
 
     private void checkPaddleWithPickupCollision() {
-        Rectangle paddleBounds = paddle.getBounds();
+        Polygon paddleBounds = paddle.getBounds();
 
         for (int i = 0; i < pickups.size; i++) {
             Pickup pickup = pickups.get(i);
-            Rectangle pickupBounds = pickup.getBounds();
-            if (Intersector.overlaps(paddleBounds, pickupBounds)) {
+            Polygon pickupBounds = pickup.getBounds();
+            if (Intersector.overlapConvexPolygons(paddleBounds, pickupBounds)) {
                 addScript(pickup);
                 pickups.removeIndex(i);
                 factory.freePickup(pickup);
+            }
+        }
+    }
+
+    private void updateEffects(float delta) {
+        for (int i = 0; i < effects.size; i++) {
+            ParticleEffectPool.PooledEffect effect = effects.get(i);
+            effect.update(delta);
+
+            if (effect.isComplete()) {
+                effects.removeIndex(i);
+                effect.free();
+            }
+        }
+    }
+
+    private void updatePickups(float delta) {
+        for (int i = 0; i < pickups.size; i++) {
+            Pickup pickup = pickups.get(i);
+            pickup.update(delta);
+
+            if (pickup.getY() < -pickup.getHeight()) {
+                factory.freePickup(pickup);
+                pickups.removeIndex(i);
             }
         }
     }
@@ -288,6 +304,8 @@ public class GameController {
     private void addScript(Pickup pickup) {
         if (pickup.isExpand()) {
             paddle.addScript(new PaddleExpandScript());
+        } else if (pickup.isShrink()) {
+            paddle.addScript(new PaddleShrinkScript());
         }
     }
 }

@@ -29,6 +29,7 @@ public final class GameConfig {
     public static final float PADDLE_PADDING = 0.3f;
     public static final float PADDLE_MIN_X = PADDLE_PADDING;
     public static final float PADDLE_MAX_X = WORLD_WIDTH - PADDLE_START_WIDTH - PADDLE_PADDING;
+    public static final float PADDLE_EXPAND_SHRINK_SPEED = 10f;
 
     public static final float BRICK_WIDTH = 2.125f;
     public static final float BRICK_HEIGHT = 1f;
@@ -53,6 +54,7 @@ public final class GameConfig {
     public static final float PICKUP_SPAWN_TIME = 2f;
     public static final float PICKUP_VELOCITY_Y = -6f;
     public static final float PICKUP_SIZE = 1f;
+    public static final float PICKUP_PROBABILITY = 1f;
 
     private GameConfig() {} // not instantiable
 }

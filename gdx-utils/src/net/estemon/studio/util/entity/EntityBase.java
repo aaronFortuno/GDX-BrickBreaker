@@ -1,9 +1,13 @@
 package net.estemon.studio.util.entity;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 import net.estemon.studio.util.entity.script.EntityScript;
 import net.estemon.studio.util.entity.script.ScriptController;
+import net.estemon.studio.util.shape.ShapeUtils;
 
 public abstract class EntityBase {
 
@@ -14,7 +18,9 @@ public abstract class EntityBase {
     protected float width = 1f;
     protected float height = 1f;
 
-    protected Rectangle bounds;
+    protected Polygon bounds;
+
+    protected Vector2 velocity = new Vector2();
 
     protected ScriptController scriptController;
 
@@ -25,13 +31,48 @@ public abstract class EntityBase {
     }
 
     private void init() {
-        bounds = new Rectangle(x, y, width, height);
+        bounds = new Polygon();
+        bounds.setPosition(x, y);
+        bounds.setVertices(createVertices());
         scriptController = new ScriptController(this);
     }
 
     // public methods
     public void update(float delta) {
         scriptController.update(delta);
+
+        float newX = x + velocity.x * delta;
+        float newY = y + velocity.y * delta;
+
+        setPosition(newX, newY);
+    }
+
+    public Vector2 getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocityXY(float velocityX, float velocityY) {
+        velocity.set(velocityX, velocityY);
+    }
+
+    public void setVelocity(float angleDeg, float value) {
+        velocity.x = value * MathUtils.cosDeg(angleDeg);
+        velocity.y = value * MathUtils.sinDeg(angleDeg);
+    }
+
+    public void setVelocityX(float velocityX) {
+        velocity.x = velocityX;
+    }
+    public void setVelocityY(float velocityY) {
+        velocity.y = velocityY;
+    }
+
+    public void multiplyVelocityX(float xAmount) {
+        velocity.x *= xAmount;
+    }
+
+    public void multiplyVelocityY(float yAmount) {
+        velocity.y *= yAmount;
     }
 
     public void setPosition(float x, float y) {
@@ -77,13 +118,31 @@ public abstract class EntityBase {
         return height;
     }
 
-    public Rectangle getBounds() {
+    public Polygon getBounds() {
         return bounds;
+    }
+
+    public float getSpeed() {
+        return velocity.len();
+    }
+
+    public void stop() {
+        velocity.setZero();
+    }
+
+    public boolean isNotActive() {
+        return velocity.isZero();
+    }
+
+    public void setSize(float size) {
+        this.width = size;
+        this.height = size;
+        updateBounds();
     }
 
     public void updateBounds() {
         bounds.setPosition(x, y);
-        bounds.setSize(width, height);
+        bounds.setVertices(createVertices());
     }
 
     public void addScript(EntityScript toAdd) {
@@ -92,5 +151,10 @@ public abstract class EntityBase {
 
     public void removeScript(EntityScript toRemove) {
         scriptController.removeScript(toRemove);
+    }
+
+    // protected methods
+    protected float[] createVertices() {
+        return ShapeUtils.createRectangle(width, height);
     }
 }

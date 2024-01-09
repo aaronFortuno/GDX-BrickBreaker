@@ -2,6 +2,7 @@ package net.estemon.studio.util.debug;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 
 import net.estemon.studio.util.Validate;
@@ -26,5 +27,13 @@ public class ShapeRendererUtils {
         Validate.notNull(circle);
 
         renderer.circle(circle.x, circle.y, circle.radius, 30);
+    }
+
+    public static void polygon(ShapeRenderer renderer, Polygon polygon) {
+        // validate params
+        Validate.notNull(renderer);
+        Validate.notNull(polygon);
+
+        renderer.polygon(polygon.getTransformedVertices());
     }
 }
