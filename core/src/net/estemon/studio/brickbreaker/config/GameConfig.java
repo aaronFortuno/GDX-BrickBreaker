@@ -46,8 +46,13 @@ public final class GameConfig {
     public static final float BALL_START_X = PADDLE_START_X + (PADDLE_START_WIDTH - BALL_SIZE) / 2f;
     public static final float BALL_START_Y = PADDLE_START_Y + PADDLE_HEIGHT;
 
-    public static final float BALL_VELOCITY = 15f;
+    public static final float BALL_START_SPEED = 16f;
+    public static final float BALL_MIN_SPEED = 10f;
+    public static final float BALL_MAX_SPEED = 22f;
+    public static final float BALL_SPEED_FACTOR = 0.3f;
+
     public static final float BALL_START_ANGLE = 60f;
+
 
     public static final int BRICK_SCORE = 10;
 

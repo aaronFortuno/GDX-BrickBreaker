@@ -19,6 +19,8 @@ import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.entity.Paddle;
 import net.estemon.studio.brickbreaker.entity.Pickup;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
+import net.estemon.studio.brickbreaker.script.BallSlowDownScript;
+import net.estemon.studio.brickbreaker.script.BallSpeedUpScript;
 import net.estemon.studio.brickbreaker.script.PaddleExpandScript;
 import net.estemon.studio.brickbreaker.script.PaddleShrinkScript;
 import net.estemon.studio.util.shape.RectangleUtils;
@@ -139,7 +141,7 @@ public class GameController {
         }
 
         // right
-        if (paddle.getX() >= GameConfig.PADDLE_MAX_X) {
+        if (paddle.getX() >= GameConfig.PADDLE_MAX_X) { // TODO check when it expands/shrink
             paddle.setX(GameConfig.PADDLE_MAX_X);
         }
     }
@@ -291,7 +293,7 @@ public class GameController {
     }
 
     private void activateBall() {
-        ball.setVelocity(GameConfig.BALL_START_ANGLE, GameConfig.BALL_VELOCITY);
+        ball.setVelocity(GameConfig.BALL_START_ANGLE, GameConfig.BALL_START_SPEED);
     }
 
     private void startLevel() {
@@ -306,6 +308,10 @@ public class GameController {
             paddle.addScript(new PaddleExpandScript());
         } else if (pickup.isShrink()) {
             paddle.addScript(new PaddleShrinkScript());
+        } else if (pickup.isSlowDown()) {
+            ball.addScript(new BallSlowDownScript());
+        } else if (pickup.isSpeedUp()) {
+            ball.addScript(new BallSpeedUpScript());
         }
     }
 }

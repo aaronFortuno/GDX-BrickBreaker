@@ -145,6 +145,10 @@ public abstract class EntityBase {
         bounds.setVertices(createVertices());
     }
 
+    public float getAngleDeg() {
+        return MathUtils.atan2(velocity.y, velocity.x) * MathUtils.radiansToDegrees;
+    }
+
     public void addScript(EntityScript toAdd) {
         scriptController.addScript(toAdd);
     }
@@ -157,4 +161,6 @@ public abstract class EntityBase {
     protected float[] createVertices() {
         return ShapeUtils.createRectangle(width, height);
     }
+
+
 }
