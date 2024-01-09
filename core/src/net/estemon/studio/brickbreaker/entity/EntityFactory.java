@@ -15,6 +15,7 @@ public class EntityFactory {
     // attributes
     private final AssetManager assetManager;
     private ParticleEffectPool fireEffectPool;
+    private ParticleEffectPool starEffectPool;
     private Pool<Pickup> pickupPool;
 
     public EntityFactory(AssetManager assetManager) {
@@ -23,9 +24,10 @@ public class EntityFactory {
     }
 
     private void init() {
-        ParticleEffect effect = assetManager.get(AssetDescriptors.FIRE);
-        fireEffectPool = new ParticleEffectPool(effect, 5, 20);
-
+        ParticleEffect fireEffect = assetManager.get(AssetDescriptors.FIRE);
+        ParticleEffect starEffect = assetManager.get(AssetDescriptors.STAR);
+        fireEffectPool = new ParticleEffectPool(fireEffect, 5, 15);
+        starEffectPool = new ParticleEffectPool(starEffect, 5, 10);
         pickupPool = Pools.get(Pickup.class, 10);
     }
 
@@ -75,6 +77,13 @@ public class EntityFactory {
 
     public ParticleEffectPool.PooledEffect createFire(float x, float y) {
         ParticleEffectPool.PooledEffect effect = fireEffectPool.obtain();
+        effect.setPosition(x, y);
+        effect.start();
+        return effect;
+    }
+
+    public ParticleEffectPool.PooledEffect createStar(float x, float y) {
+        ParticleEffectPool.PooledEffect effect = starEffectPool.obtain();
         effect.setPosition(x, y);
         effect.start();
         return effect;

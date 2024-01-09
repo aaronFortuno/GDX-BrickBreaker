@@ -141,8 +141,8 @@ public class GameController {
         }
 
         // right
-        if (paddle.getX() >= GameConfig.PADDLE_MAX_X) { // TODO check when it expands/shrink
-            paddle.setX(GameConfig.PADDLE_MAX_X);
+        if (paddle.getX() >= GameConfig.PADDLE_MAX_X - paddle.getWidth()) { // TODO check when it expands/shrink
+            paddle.setX(GameConfig.PADDLE_MAX_X - paddle.getWidth());
         }
     }
 
@@ -251,7 +251,11 @@ public class GameController {
             Pickup pickup = pickups.get(i);
             Polygon pickupBounds = pickup.getBounds();
             if (Intersector.overlapConvexPolygons(paddleBounds, pickupBounds)) {
+                float x = pickup.getX() + pickup.getWidth() / 2f;
+                float y = pickup.getY();
+
                 addScript(pickup);
+                spawnStarEffect(x, y);
                 pickups.removeIndex(i);
                 factory.freePickup(pickup);
             }
@@ -284,6 +288,11 @@ public class GameController {
 
     private void spawnFireEffect(float effectX, float effectY) {
         ParticleEffectPool.PooledEffect effect = factory.createFire(effectX, effectY);
+        effects.add(effect);
+    }
+
+    private void spawnStarEffect(float x, float y) {
+        ParticleEffectPool.PooledEffect effect = factory.createStar(x, y);
         effects.add(effect);
     }
 
