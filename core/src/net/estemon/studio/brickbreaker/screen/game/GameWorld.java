@@ -25,7 +25,7 @@ import net.estemon.studio.brickbreaker.script.PaddleExpandScript;
 import net.estemon.studio.brickbreaker.script.PaddleShrinkScript;
 import net.estemon.studio.util.shape.RectangleUtils;
 
-public class GameController {
+public class GameWorld {
 
     // attributes
     private final ScoreController scoreController;
@@ -44,7 +44,7 @@ public class GameController {
 
 
     // constructors
-    public GameController(ScoreController scoreController, EntityFactory factory) {
+    public GameWorld(ScoreController scoreController, EntityFactory factory) {
         this.scoreController = scoreController;
         this.factory = factory;
         init();
@@ -61,13 +61,6 @@ public class GameController {
 
     // public methods
     public void update(float delta) {
-        // handle debug input
-        handleDebugInput();
-
-        if (ball.isNotActive() && Gdx.input.justTouched()) {
-            activateBall();
-        }
-
         if (ball.isNotActive()) {
             return;
         }
@@ -124,16 +117,6 @@ public class GameController {
     }
 
     // private methods
-    private void handleDebugInput() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
-            drawGrid = !drawGrid;
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
-            drawDebug = !drawDebug;
-        }
-    }
-
     private void blockPaddleFromLeavingWorld() {
         // left
         if (paddle.getX() <= GameConfig.PADDLE_MIN_X) {

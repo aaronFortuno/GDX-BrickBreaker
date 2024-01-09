@@ -17,8 +17,9 @@ public class GameScreen extends ScreenAdapter {
     private final SpriteBatch batch;
     private final ScoreController scoreController;
 
-    private GameController controller;
-    private GameRenderer renderer;
+    private GameWorld gameWorld;        // model
+    private GameController controller;  // controller
+    private GameRenderer renderer;      // view
     private EntityFactory factory;
 
     // constructors
