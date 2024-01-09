@@ -5,15 +5,18 @@ import com.badlogic.gdx.Input;
 
 import net.estemon.studio.brickbreaker.config.GameConfig;
 import net.estemon.studio.brickbreaker.entity.Paddle;
+import net.estemon.studio.brickbreaker.screen.game.GameController;
 
 public class PaddleInputController {
 
     // attributes
     private final Paddle paddle;
+    private final GameController controller;
 
     // constructors
-    public PaddleInputController(Paddle paddle) {
+    public PaddleInputController(Paddle paddle, GameController controller) {
         this.paddle = paddle;
+        this.controller = controller;
     }
 
     // public methods

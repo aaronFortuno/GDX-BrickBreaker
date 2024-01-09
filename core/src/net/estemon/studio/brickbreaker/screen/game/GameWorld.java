@@ -32,7 +32,6 @@ public class GameWorld {
 
     private final EntityFactory factory;
     private Paddle paddle;
-    private PaddleInputController paddleInputController;
     private Array<Brick> bricks = new Array<>();
     private Ball ball;
 
@@ -52,7 +51,6 @@ public class GameWorld {
 
     private void init() {
         paddle = factory.createPaddle();
-        paddleInputController = new PaddleInputController(paddle);
 
         ball = factory.createBall();
 
@@ -66,7 +64,6 @@ public class GameWorld {
         }
 
         // paddle logic
-        paddleInputController.update(delta);
         paddle.update(delta);
         blockPaddleFromLeavingWorld();
 
@@ -82,6 +79,18 @@ public class GameWorld {
         if (bricks.isEmpty()) {
             startLevel();
         }
+    }
+
+    public void activateBall() {
+        ball.setVelocity(GameConfig.BALL_START_ANGLE, GameConfig.BALL_START_SPEED);
+    }
+
+    public void toggleDrawGrid() {
+        drawGrid = !drawGrid;
+    }
+
+    public void toggleDrawDebug() {
+        drawDebug = !drawDebug;
     }
 
     public Paddle getPaddle() {
@@ -282,10 +291,6 @@ public class GameWorld {
     private void spawnPickup(float x, float y) {
         Pickup pickup = factory.createPickup(x, y);
         pickups.add(pickup);
-    }
-
-    private void activateBall() {
-        ball.setVelocity(GameConfig.BALL_START_ANGLE, GameConfig.BALL_START_SPEED);
     }
 
     private void startLevel() {

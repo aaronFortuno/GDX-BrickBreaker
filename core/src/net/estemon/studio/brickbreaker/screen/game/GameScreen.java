@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import net.estemon.studio.brickbreaker.BrickBreakerGame;
 import net.estemon.studio.brickbreaker.common.ScoreController;
 import net.estemon.studio.brickbreaker.entity.EntityFactory;
+import net.estemon.studio.brickbreaker.input.PaddleInputController;
 import net.estemon.studio.util.game.GameBase;
 
 public class GameScreen extends ScreenAdapter {
@@ -20,7 +21,9 @@ public class GameScreen extends ScreenAdapter {
     private GameWorld gameWorld;        // model
     private GameController controller;  // controller
     private GameRenderer renderer;      // view
+
     private EntityFactory factory;
+    private PaddleInputController paddleInputController;
 
     // constructors
     public GameScreen(GameBase game) {
@@ -35,12 +38,17 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void show() {
         factory = new EntityFactory(assetManager);
-        controller = new GameController(scoreController, factory);
-        renderer = new GameRenderer(controller, batch, assetManager);
+
+        gameWorld = new GameWorld(scoreController, factory);
+        renderer = new GameRenderer(gameWorld, batch, assetManager);
+        controller = new GameController(gameWorld, renderer);
+
+        paddleInputController = new PaddleInputController(gameWorld.getPaddle(), controller);
     }
 
     @Override
     public void render(float delta) {
+        paddleInputController.update(delta);
         controller.update(delta);
         renderer.render(delta);
     }
