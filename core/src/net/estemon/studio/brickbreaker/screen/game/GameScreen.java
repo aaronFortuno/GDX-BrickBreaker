@@ -9,6 +9,7 @@ import net.estemon.studio.brickbreaker.common.ScoreController;
 import net.estemon.studio.brickbreaker.common.SoundController;
 import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
+import net.estemon.studio.brickbreaker.screen.menu.MenuScreen;
 import net.estemon.studio.util.game.GameBase;
 
 public class GameScreen extends ScreenAdapter {
@@ -52,11 +53,16 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        if (!gameWorld.isGameOver()) {
+        boolean gameOver = gameWorld.isGameOver();
+        if (!gameOver) {
             paddleInputController.update(delta);
         }
         controller.update(delta);
         renderer.render(delta);
+
+        if (gameOver) {
+            game.setScreen(new MenuScreen(game));
+        }
     }
 
     @Override

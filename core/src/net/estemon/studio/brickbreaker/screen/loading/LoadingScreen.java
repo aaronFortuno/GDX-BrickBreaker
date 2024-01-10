@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import net.estemon.studio.brickbreaker.assets.AssetDescriptors;
 import net.estemon.studio.brickbreaker.config.GameConfig;
 import net.estemon.studio.brickbreaker.screen.game.GameScreen;
+import net.estemon.studio.brickbreaker.screen.menu.MenuScreen;
 import net.estemon.studio.util.game.GameBase;
 import net.estemon.studio.util.screen.loading.LoadingScreenBase;
 
@@ -24,7 +25,7 @@ public class LoadingScreen extends LoadingScreenBase {
 
     @Override
     protected void onLoadDone() {
-        game.setScreen(new GameScreen(game));
+        game.setScreen(new MenuScreen(game));
     }
 
     @Override
