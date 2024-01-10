@@ -2,6 +2,7 @@ package net.estemon.studio.brickbreaker.screen.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Intersector;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import net.estemon.studio.brickbreaker.common.ScoreController;
+import net.estemon.studio.brickbreaker.common.SoundController;
 import net.estemon.studio.brickbreaker.config.GameConfig;
 import net.estemon.studio.brickbreaker.entity.Ball;
 import net.estemon.studio.brickbreaker.entity.Brick;
@@ -23,14 +25,17 @@ import net.estemon.studio.brickbreaker.script.BallSlowDownScript;
 import net.estemon.studio.brickbreaker.script.BallSpeedUpScript;
 import net.estemon.studio.brickbreaker.script.PaddleExpandScript;
 import net.estemon.studio.brickbreaker.script.PaddleShrinkScript;
+import net.estemon.studio.util.parallax.ParallaxLayer;
 import net.estemon.studio.util.shape.RectangleUtils;
 
 public class GameWorld {
 
     // attributes
+    private final SoundController soundController;
     private final ScoreController scoreController;
-
     private final EntityFactory factory;
+
+    private ParallaxLayer background;
     private Paddle paddle;
     private Array<Brick> bricks = new Array<>();
     private Ball ball;
@@ -41,24 +46,28 @@ public class GameWorld {
     private Array<ParticleEffectPool.PooledEffect> effects = new Array<>();
     private Array<Pickup> pickups = new Array<>();
 
+    private int lives = GameConfig.LIVES_START;
 
     // constructors
-    public GameWorld(ScoreController scoreController, EntityFactory factory) {
+    public GameWorld(SoundController soundController, ScoreController scoreController, EntityFactory factory) {
+        this.soundController = soundController;
         this.scoreController = scoreController;
         this.factory = factory;
         init();
     }
 
     private void init() {
+        background = factory.createBackground();
         paddle = factory.createPaddle();
-
         ball = factory.createBall();
-
         startLevel();
     }
 
     // public methods
     public void update(float delta) {
+        background.setSpeed(GameConfig.BACKGROUND_SPEED);
+        background.update(delta);
+
         if (ball.isNotActive()) {
             return;
         }
@@ -93,6 +102,10 @@ public class GameWorld {
         drawDebug = !drawDebug;
     }
 
+    public ParallaxLayer getBackground() {
+        return background;
+    }
+
     public Paddle getPaddle() {
         return paddle;
     }
@@ -117,12 +130,20 @@ public class GameWorld {
         return effects;
     }
 
+    public int getLives() {
+        return lives;
+    }
+
     public boolean isDrawGrid() {
         return drawGrid;
     }
 
     public boolean isDrawDebug() {
         return drawDebug;
+    }
+
+    public boolean isGameOver() {
+        return lives <= 0;
     }
 
     // private methods
@@ -150,8 +171,11 @@ public class GameWorld {
 
         // top <-> bottom
         if (ball.getY() <= 0) {
-            ball.setY(0);
-            ball.multiplyVelocityY(-1f);
+            // ball.setY(0);
+            // ball.multiplyVelocityY(-1f);
+            soundController.lost();
+            lives--;
+            restart();
         } else if (ball.getY() >= GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE) {
             ball.setY(GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE);
             ball.multiplyVelocityY(-1f);
@@ -169,6 +193,7 @@ public class GameWorld {
         Polygon paddleBounds = paddle.getBounds();
 
         if (Intersector.overlapConvexPolygons(ballBounds, paddleBounds)) {
+            soundController.hit();
             float ballCenterX = ball.getX() + GameConfig.BALL_RADIUS;
             float percent = (ballCenterX - paddle.getX()) / paddle.getWidth(); // 0-1
 
@@ -197,6 +222,8 @@ public class GameWorld {
             if (!Intersector.overlapConvexPolygons(ballPolygon, brickPolygon)) {
                 continue;
             }
+
+            soundController.hit();
 
             Vector2 topLeft = RectangleUtils.getTopLeft(brickBounds);
             Vector2 topRight = RectangleUtils.getTopRight(brickBounds);
@@ -243,6 +270,8 @@ public class GameWorld {
             Pickup pickup = pickups.get(i);
             Polygon pickupBounds = pickup.getBounds();
             if (Intersector.overlapConvexPolygons(paddleBounds, pickupBounds)) {
+                soundController.pickup();
+
                 float x = pickup.getX() + pickup.getWidth() / 2f;
                 float y = pickup.getY();
 
@@ -294,11 +323,29 @@ public class GameWorld {
     }
 
     private void startLevel() {
+        restart();
         bricks.addAll(factory.createBricks());
+    }
+
+    private void restart() {
+        // cleanup previous pickups and effects
+        for (int i = 0; i < pickups.size; i++) {
+            Pickup pickup = pickups.get(i);
+            factory.freePickup(pickup);
+            pickups.removeIndex(i);
+        }
+
+        for (int i = 0; i < effects.size; i++) {
+            ParticleEffectPool.PooledEffect effect = effects.get(i);
+            effect.free();
+            effects.removeIndex(i);
+        }
+
         paddle.setPosition(GameConfig.PADDLE_START_X, GameConfig.PADDLE_START_Y);
         ball.setPosition(GameConfig.BALL_START_X, GameConfig.BALL_START_Y);
         ball.stop();
     }
+
 
     private void addScript(Pickup pickup) {
         if (pickup.isExpand()) {

@@ -40,14 +40,13 @@ public class GameController {
         // handle debug input
         handleDebugInput();
 
-        Ball ball = gameWorld.getBall();
-
-        if (ball.isNotActive() && Gdx.input.justTouched()) {
-            gameWorld.activateBall();
+        if (gameWorld.isGameOver()) {
+            return;
         }
 
-        if (ball.isNotActive()) {
-            return;
+        Ball ball = gameWorld.getBall();
+        if (ball.isNotActive() && Gdx.input.justTouched()) {
+            gameWorld.activateBall();
         }
 
         gameWorld.update(delta);

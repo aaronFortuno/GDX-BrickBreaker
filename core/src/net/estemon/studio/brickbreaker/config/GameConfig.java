@@ -35,7 +35,7 @@ public final class GameConfig {
     public static final float BRICK_HEIGHT = 1f;
 
     public static final float BRICK_LEFT_PAD = 0.5f;
-    public static final float BRICK_TOP_PAD = 1.5f;
+    public static final float BRICK_TOP_PAD = 2.5f;
     public static final float BRICK_COLUMN_SPACING = 0.5f;
     public static final float BRICK_ROW_SPACING = 0.5f;
     public static final int COLUMN_COUNT = 12;
@@ -60,6 +60,15 @@ public final class GameConfig {
     public static final float PICKUP_VELOCITY_Y = -6f;
     public static final float PICKUP_SIZE = 1f;
     public static final float PICKUP_PROBABILITY = 0.3f;
+
+    public static final int LIVES_START = 3;
+    public static final float LIFE_HUD_WIDTH = 40f;
+    public static final float LIFE_HUD_HEIGHT = 12f;
+    public static final float LIFE_HUD_SPACING = 10f;
+
+    public static final float HUD_PADDING = 20f;
+
+    public static final float BACKGROUND_SPEED = 0.2f;
 
     private GameConfig() {} // not instantiable
 }

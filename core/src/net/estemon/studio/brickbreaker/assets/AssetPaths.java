@@ -11,5 +11,11 @@ public final class AssetPaths {
     public static final String FIRE = "effects/fire.pfx";
     public static final String STAR = "effects/star.pfx";
 
+    public static final String HIT = "sounds/hit.wav";
+    public static final String LOST = "sounds/lost.wav";
+    public static final String PICKUP = "sounds/pickup.wav";
+
+    public static final String SKIN = "ui/skin.json";
+
     private AssetPaths() {} // not instantiable
 }

@@ -9,6 +9,8 @@ import com.badlogic.gdx.utils.Pools;
 
 import net.estemon.studio.brickbreaker.assets.AssetDescriptors;
 import net.estemon.studio.brickbreaker.config.GameConfig;
+import net.estemon.studio.util.Direction;
+import net.estemon.studio.util.parallax.ParallaxLayer;
 
 public class EntityFactory {
 
@@ -32,6 +34,13 @@ public class EntityFactory {
     }
 
     // public methods
+    public ParallaxLayer createBackground() {
+        ParallaxLayer background = new ParallaxLayer();
+        background.setSize(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+        background.setDirection(Direction.DOWN);
+        return background;
+    }
+
     public Paddle createPaddle() {
         Paddle paddle = new Paddle();
         paddle.setPosition(GameConfig.PADDLE_START_X, GameConfig.PADDLE_START_Y);

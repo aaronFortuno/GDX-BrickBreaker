@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -30,6 +31,7 @@ import net.estemon.studio.util.ViewportUtils;
 import net.estemon.studio.util.debug.DebugCameraController;
 import net.estemon.studio.util.debug.ShapeRendererUtils;
 import net.estemon.studio.util.entity.EntityBase;
+import net.estemon.studio.util.parallax.ParallaxLayer;
 
 public class GameRenderer implements Disposable {
 
@@ -132,7 +134,15 @@ public class GameRenderer implements Disposable {
 
     private void drawGamePlay() {
         // background
-        batch.draw(backgroundRegion, 0, 0, GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+        // batch.draw(backgroundRegion, 0, 0, GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT); // static background
+        ParallaxLayer background = gameWorld.getBackground();
+        Rectangle firstRegionBounds = background.getFirstRegionBounds();
+        Rectangle secondRegionBounds = background.getSecondRegionBounds();
+
+        batch.draw(backgroundRegion, firstRegionBounds.x, firstRegionBounds.y,
+                firstRegionBounds.width, firstRegionBounds.height);
+        batch.draw(backgroundRegion, secondRegionBounds.x, secondRegionBounds.y,
+                secondRegionBounds.width, secondRegionBounds.height);
 
         // paddle
         Paddle paddle = gameWorld.getPaddle();
@@ -203,6 +213,13 @@ public class GameRenderer implements Disposable {
     private void drawDebug() {
         Color oldColor = renderer.getColor().cpy();
 
+        // background
+        ParallaxLayer background = gameWorld.getBackground();
+        Rectangle first = background.getFirstRegionBounds();
+        Rectangle second = background.getSecondRegionBounds();
+        ShapeRendererUtils.rect(renderer, first);
+        ShapeRendererUtils.rect(renderer, second);
+
         // drawing paddle
         renderer.setColor(Color.CORAL);
         Polygon paddleBounds = gameWorld.getPaddle().getBounds();
@@ -244,9 +261,33 @@ public class GameRenderer implements Disposable {
     private void drawHud() {
         String scoreString = "SCORE: " + gameWorld.getScoreString();
         layout.setText(scoreFont, scoreString);
+        scoreFont.draw(batch, layout, GameConfig.HUD_PADDING, GameConfig.HUD_HEIGHT - layout.height);
 
-        scoreFont.draw(batch, layout, 20f, GameConfig.HUD_HEIGHT - layout.height);
+        /*String livesString = "LIVES: " + gameWorld.getLives();
+        layout.setText(scoreFont, livesString);
+        scoreFont.draw(batch, layout, GameConfig.HUD_WIDTH - layout.width - GameConfig.HUD_PADDING, GameConfig.HUD_HEIGHT - layout.height);*/
 
+        int lives = gameWorld.getLives();
+        Color oldColor = batch.getColor().cpy();
+        float offsetX = GameConfig.LIVES_START * (GameConfig.LIFE_HUD_WIDTH + GameConfig.LIFE_HUD_SPACING);
+        float offsetY = 36f;
+        float spacing = GameConfig.LIFE_HUD_WIDTH + GameConfig.LIFE_HUD_SPACING;
+
+        float x = GameConfig.HUD_WIDTH - offsetX;
+        float y = GameConfig.HUD_HEIGHT - offsetY;
+
+        for (int i = 0; i < GameConfig.LIVES_START; i++) {
+            if (lives <= i) {
+                batch.setColor(1, 1, 1, 0.5f);
+            }
+
+            batch.draw(paddleRegion,
+                    x + i * spacing, y,
+                    GameConfig.LIFE_HUD_WIDTH, GameConfig.LIFE_HUD_HEIGHT
+                    );
+        }
+
+        batch.setColor(oldColor);
     }
 
     // static methods

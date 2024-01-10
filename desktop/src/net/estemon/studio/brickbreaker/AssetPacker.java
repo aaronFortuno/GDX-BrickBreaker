@@ -15,5 +15,11 @@ public class AssetPacker {
                 FINAL_DIR + "/gameplay",
                 "gameplay"
         );
+
+        TexturePacker.process(
+                RAW_DIR + "/ui",
+                FINAL_DIR + "/ui",
+                "skin"
+        );
     }
 }
