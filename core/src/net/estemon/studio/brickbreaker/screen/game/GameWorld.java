@@ -40,8 +40,8 @@ public class GameWorld {
     private Array<Brick> bricks = new Array<>();
     private Ball ball;
 
-    private boolean drawGrid = true;
-    private boolean drawDebug = true;
+    private boolean drawGrid = false;
+    private boolean drawDebug = false;
 
     private Array<ParticleEffectPool.PooledEffect> effects = new Array<>();
     private Array<Pickup> pickups = new Array<>();
@@ -60,6 +60,7 @@ public class GameWorld {
         background = factory.createBackground();
         paddle = factory.createPaddle();
         ball = factory.createBall();
+        scoreController.reset();
         startLevel();
     }
 
@@ -176,6 +177,9 @@ public class GameWorld {
             soundController.lost();
             lives--;
             restart();
+            if (isGameOver()) {
+                scoreController.updateHighScore();
+            }
         } else if (ball.getY() >= GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE) {
             ball.setY(GameConfig.WORLD_HEIGHT - GameConfig.BALL_SIZE);
             ball.multiplyVelocityY(-1f);
