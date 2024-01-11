@@ -23,6 +23,7 @@ import net.estemon.studio.brickbreaker.assets.RegionNames;
 import net.estemon.studio.brickbreaker.common.ScoreController;
 import net.estemon.studio.brickbreaker.config.GameConfig;
 import net.estemon.studio.brickbreaker.screen.game.GameScreen;
+import net.estemon.studio.brickbreaker.screen.transition.ScreenTransitions;
 import net.estemon.studio.util.GdxUtils;
 import net.estemon.studio.util.game.GameBase;
 import net.estemon.studio.util.screen.ScreenBaseAdapter;
@@ -122,7 +123,7 @@ public class MenuScreen extends ScreenBaseAdapter {
 
     // private methods
     private void play() {
-        game.setScreen(new GameScreen(game));
+        game.setScreen(new GameScreen(game), ScreenTransitions.SLIDE);
     }
 
     private void quit() {

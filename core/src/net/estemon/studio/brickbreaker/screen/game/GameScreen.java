@@ -10,6 +10,7 @@ import net.estemon.studio.brickbreaker.common.SoundController;
 import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
 import net.estemon.studio.brickbreaker.screen.menu.MenuScreen;
+import net.estemon.studio.brickbreaker.screen.transition.ScreenTransitions;
 import net.estemon.studio.util.game.GameBase;
 import net.estemon.studio.util.screen.ScreenBaseAdapter;
 
@@ -62,7 +63,7 @@ public class GameScreen extends ScreenBaseAdapter {
         renderer.render(delta);
 
         if (gameOver) {
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new MenuScreen(game), ScreenTransitions.SCALE);
         }
     }
 
