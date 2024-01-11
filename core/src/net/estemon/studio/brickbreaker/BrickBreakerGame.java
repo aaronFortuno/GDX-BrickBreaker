@@ -13,13 +13,11 @@ public class BrickBreakerGame extends GameBase {
 
 	public BrickBreakerGame() {
 		super();
-		System.out.println("[BRICK BREAKER GAME]");
 	}
 
 	// public methods
 	@Override
 	public void postCreate() {
-		System.out.println("[BRICK BREAKER GAME] postCreate");
 		scoreController = new ScoreController();
 		setScreen(new LoadingScreen(this));
 	}

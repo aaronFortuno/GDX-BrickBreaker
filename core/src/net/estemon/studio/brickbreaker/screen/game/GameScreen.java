@@ -11,8 +11,9 @@ import net.estemon.studio.brickbreaker.entity.EntityFactory;
 import net.estemon.studio.brickbreaker.input.PaddleInputController;
 import net.estemon.studio.brickbreaker.screen.menu.MenuScreen;
 import net.estemon.studio.util.game.GameBase;
+import net.estemon.studio.util.screen.ScreenBaseAdapter;
 
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends ScreenBaseAdapter {
 
     // attributes
     private final GameBase game;

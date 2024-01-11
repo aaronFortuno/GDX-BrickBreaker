@@ -1,6 +1,7 @@
 package net.estemon.studio.brickbreaker.screen.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -24,8 +25,9 @@ import net.estemon.studio.brickbreaker.config.GameConfig;
 import net.estemon.studio.brickbreaker.screen.game.GameScreen;
 import net.estemon.studio.util.GdxUtils;
 import net.estemon.studio.util.game.GameBase;
+import net.estemon.studio.util.screen.ScreenBaseAdapter;
 
-public class MenuScreen extends ScreenAdapter {
+public class MenuScreen extends ScreenBaseAdapter {
 
     // attributes
     private final GameBase game;
@@ -111,6 +113,11 @@ public class MenuScreen extends ScreenAdapter {
     public void dispose() {
         Gdx.input.setInputProcessor(null);
         stage.dispose();
+    }
+
+    @Override
+    public InputProcessor getInputProcessor() {
+        return stage;
     }
 
     // private methods

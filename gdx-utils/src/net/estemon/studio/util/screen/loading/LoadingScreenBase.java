@@ -12,8 +12,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import net.estemon.studio.util.GdxUtils;
 import net.estemon.studio.util.Validate;
 import net.estemon.studio.util.game.GameBase;
+import net.estemon.studio.util.screen.ScreenBaseAdapter;
 
-public abstract class LoadingScreenBase extends ScreenAdapter {
+public abstract class LoadingScreenBase extends ScreenBaseAdapter {
 
     // constants
     private static final float DEFAULT_HUD_WIDTH = 640f;
